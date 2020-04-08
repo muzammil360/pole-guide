@@ -1,6 +1,9 @@
 # Installation
 Make sure you have Python 3.6+ installed. In order to install all the dependencies
 ```
+cd </path/to/project/dir>
+git clone https://github.com/muzammil360/pole-guide.git
+cd "pole-guide"
 python -m pip install -r requirements.txt
 ```
 
@@ -15,6 +18,12 @@ Go to `<project_root>` and type
 python main.py --weights=<path/to/weights/file>
 ```
 Above is the bare minimum command. You can change more settings by giving additional command line args. For more info, keep reading this readme.
+
+## Pulling latest changes
+```
+cd <project_root>           # go to project root
+git pull                    # pull the latest changes
+```
 
 ## Visualization
 In order to visualize the detection output, use `--visualize` flag with the run command.
