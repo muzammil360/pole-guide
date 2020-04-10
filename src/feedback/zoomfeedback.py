@@ -44,7 +44,10 @@ class ZoomFeedback():
 
         self.logger.debug('canvas.iou: {}'.format(iou(self.canvas, detection)))
         self.logger.debug('roi.iou: {}'.format(iou(self.roi, detection)))
-        self.logger.debug('roi.contains_rect: {}'.format(self.roi.contains_rect(detection)))
+
+        containsDet = self.roi.contains_rect(detection)
+        self.logger.debug('roi.contains_rect: {}'.format(containsDet))
+        self.logger.debug('roi.contains_rect: {}'.format(type(containsDet)))
 
          # compute object state
         state = self.get_object_state(detection)
@@ -68,7 +71,7 @@ class ZoomFeedback():
             return ObjectState.OUTSIDE_ROI
 
 
-        if self.roi.contains_rect(detection) is True:
+        if int(self.roi.contains_rect(detection)) == 1:
             return ObjectState.INSIDE_ROI
         else:
             return ObjectState.CROSSING_ROI
