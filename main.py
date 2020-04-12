@@ -19,7 +19,7 @@ def parse_args():
 
     parser.add_argument('--guard_size',type=int, default = 5, required= False, help='no. of pixels acting as guard band inside image')
     parser.add_argument('--iou_thres_lower',type=float, default = 0.3 , required= False, help='minimum iou detection should have with image')
-    parser.add_argument('--iou_thres_higher',type=float, default = 0.7 , required= False, help='maximum iou detection should have with image')
+    parser.add_argument('--iou_thres_higher',type=float, default = 0.5 , required= False, help='maximum iou detection should have with image')
     parser.add_argument('--weights',type=str , required= True, help='path to weights file')
     parser.add_argument('--config',type=str , default = 'data/xyolov3-tiny-obj.cfg' ,required= False, help='path to weights file')
     parser.add_argument('--visualize', default=False, required= False, action='store_true', help='show yolo output?')
