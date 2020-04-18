@@ -1,3 +1,4 @@
+from src.structures.rectangle import SimpleRectangle
 
 
 def iou(rect1, rect2):
@@ -43,3 +44,44 @@ def is_monotic3(a,b,c):
     output = (a<=b) and (b<=c)
 
     return output
+
+
+def rectify_leg(start, legLen, limit, rectifyAmount):
+    '''
+    if (start + legLen)>limit, then legLen is reduced to ensure 
+    above condition is not satisfied.
+    rectifyAmount reduces legLen even further if condition is satisfied
+    '''
+
+    newlegLen = legLen
+
+    projection = start + legLen
+    if projection > limit:
+        difference = projection - limit
+        newlegLen = legLen - difference
+        newlegLen = newlegLen - rectifyAmount         # remove 1 more pixel for safety
+
+
+    return newlegLen
+
+
+def rectify_detection(inputDetection, canvas, rectifyAmount):
+    '''
+    reduces width and height of detection rectangle by 
+    rectifyAmount if it extends beyond the canvas boundaries 
+    '''
+
+    # get canvas width and height
+    canvasWidth = canvas.w
+    canvasHeight = canvas.h
+
+    # rectify width if it extends beyond the canvas boundary
+    newWidth = rectify_leg(inputDetection.x, inputDetection.w , canvasWidth, rectifyAmount)
+
+    # rectify height if it extends beyond the canvas boundary
+    newHeight = rectify_leg(inputDetection.y, inputDetection.h , canvasHeight, rectifyAmount)
+
+    # make rectified rectangle
+    outputDetection = SimpleRectangle(inputDetection.x, inputDetection.y, newWidth, newHeight)
+
+    return outputDetection

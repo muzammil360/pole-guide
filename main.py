@@ -10,7 +10,7 @@ from src.structures.rectangle import SimpleRectangle
 from src.detectors.yolov3 import Yolov3
 from src.feedback.zoomfeedback import ZoomFeedback
 from src.feedback.feedbacktypes import FeedbackTypes
-
+from src.utils import rectify_detection
 
 logger = get_logger('Main')
 
@@ -23,6 +23,7 @@ def parse_args():
     parser.add_argument('--weights',type=str , required= True, help='path to weights file')
     parser.add_argument('--config',type=str , default = 'data/xyolov3-tiny-obj.cfg' ,required= False, help='path to weights file')
     parser.add_argument('--visualize', default=False, required= False, action='store_true', help='show yolo output?')
+    parser.add_argument('--detection_conf', type=float, default = 0.4 , required= False, help='yolo detection threshold')
     
     args = parser.parse_args()
     return args
@@ -135,7 +136,7 @@ if __name__ == '__main__':
     config_addr = args.config 
     weights_addr = args.weights 
     input_dim = 416 
-    confidence = 0.25
+    confidence = args.detection_conf
     num_classes = 1
     nms_theshold = 0.4
     class_name_fileaddr = 'data/obj.names'
@@ -182,6 +183,9 @@ if __name__ == '__main__':
             h = detections[0][4] - detections[0][2] + 1
             detections = SimpleRectangle(x,y,w,h)
             logger.debug('detection rect: {}'.format(detections))
+
+            detections = rectify_detection(detections, canvas, guard)
+            logger.debug('rectified detection rect: {}'.format(detections))
 
             fb = feedbackProcessor.run(detections)
 
