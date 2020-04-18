@@ -1,5 +1,3 @@
-from src.structures.rectangle import SimpleRectangle
-
 
 def iou(rect1, rect2):
     '''
@@ -81,7 +79,4 @@ def rectify_detection(inputDetection, canvas, rectifyAmount):
     # rectify height if it extends beyond the canvas boundary
     newHeight = rectify_leg(inputDetection.y, inputDetection.h , canvasHeight, rectifyAmount)
 
-    # make rectified rectangle
-    outputDetection = SimpleRectangle(inputDetection.x, inputDetection.y, newWidth, newHeight)
-
-    return outputDetection
+    return newWidth, newHeight

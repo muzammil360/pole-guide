@@ -1,11 +1,13 @@
 import sys
 import argparse
 import os
+import time
 
 import cv2
 
 from src.logger import get_logger
 from src.sensors.camera import Camera
+from src.sensors.imagefolder import ImageFolder
 from src.structures.rectangle import SimpleRectangle
 from src.detectors.yolov3 import Yolov3
 from src.feedback.zoomfeedback import ZoomFeedback
@@ -22,8 +24,10 @@ def parse_args():
     parser.add_argument('--iou_thres_higher',type=float, default = 0.5 , required= False, help='maximum iou detection should have with image')
     parser.add_argument('--weights',type=str , required= True, help='path to weights file')
     parser.add_argument('--config',type=str , default = 'data/xyolov3-tiny-obj.cfg' ,required= False, help='path to weights file')
-    parser.add_argument('--visualize', default=False, required= False, action='store_true', help='show yolo output?')
     parser.add_argument('--detection_conf', type=float, default = 0.4 , required= False, help='yolo detection threshold')
+    parser.add_argument('--wait_ms', type=float, default = 1000 , required= False, help='delay in milliseconds b/w two iterations')
+    parser.add_argument('--image_folder',type=str , default = '' ,required= False, help='path to image folder')
+    parser.add_argument('--visualize', default=False, required= False, action='store_true', help='show yolo output?')
     
     args = parser.parse_args()
     return args
@@ -128,8 +132,15 @@ if __name__ == '__main__':
     args = parse_args()
     logger.info(args)
 
-    # make camera
-    cam = Camera(0)
+    imageFolderDir = args.image_folder
+    sleepPeriod = args.wait_ms
+
+    # make image reader
+    if len(imageFolderDir)>0:
+        cam = ImageFolder(imageFolderDir)
+    else:
+        cam = Camera(0)
+    
     img = cam.getReading()
 
     # make detector
@@ -168,7 +179,7 @@ if __name__ == '__main__':
         try:
             # read image
             img = cam.getReading()
-            logger.info('FPS: {:.4f}'.format(cam.getCurrFPS()))
+            logger.info('FPS: {:.4f}'.format(cam.getReadFreq()))
 
             # get detections
             detections = det.detect(img)
@@ -184,10 +195,11 @@ if __name__ == '__main__':
             detections = SimpleRectangle(x,y,w,h)
             logger.debug('detection rect: {}'.format(detections))
 
-            detections = rectify_detection(detections, canvas, 1)
-            logger.debug('rectified detection rect: {}'.format(detections))
+            newWidth, newHeight = rectify_detection(detections, canvas, 1)
+            newDetection = SimpleRectangle(x,y,newWidth,newHeight)
+            logger.debug('rectified detection rect: {}'.format(newDetection))
 
-            fb = feedbackProcessor.run(detections)
+            fb = feedbackProcessor.run(newDetection)
 
             # print the feedback
             logger.info(fb)
@@ -202,6 +214,8 @@ if __name__ == '__main__':
                 logger.info('sorry. can not provide feedback')
             else:
                 logger.info('unknown feedback type. sorry')
+
+            time.sleep(sleepPeriod)
 
 
 
