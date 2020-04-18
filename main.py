@@ -137,7 +137,7 @@ if __name__ == '__main__':
 
     # make image reader
     if len(imageFolderDir)>0:
-        cam = ImageFolder(imageFolderDir)
+        cam = ImageFolder(imageFolderDir,(640,480))
     else:
         cam = Camera(0)
     

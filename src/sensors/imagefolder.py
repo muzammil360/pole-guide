@@ -11,8 +11,9 @@ import numpy as np
 from src.logger import get_logger
 
 class ImageFolder:
-    def __init__(self,input_dir):
+    def __init__(self,input_dir, new_size=(-1,-1)):
         self.input_dir = input_dir
+        self.new_size = new_size
 
         # get list of all images
         filelist = DirFileLister(self.input_dir)
@@ -38,6 +39,11 @@ class ImageFolder:
         i = self.i % self.n                  # compute iter 
         fileaddr = self.filelist[i]              # get current file address
         image = cv2.imread(fileaddr)            # read the image
+
+        # resize if new size is given
+        if self.new_size[0]>0 and self.new_size[1]>0:
+            image = cv2.resize(image,self.new_size)
+
         self.i+=1                               # increment the pointer 
 
         return image
