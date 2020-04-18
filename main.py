@@ -199,7 +199,11 @@ if __name__ == '__main__':
             newDetection = SimpleRectangle(x,y,newWidth,newHeight)
             logger.debug('rectified detection rect: {}'.format(newDetection))
 
+
+            start = time.time()
             fb = feedbackProcessor.run(newDetection)
+            dt = time.time() - start
+            logger.info('time to run part2: {:.4f} ms'.format(dt*1000))
 
             # print the feedback
             logger.info(fb)
