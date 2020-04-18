@@ -184,7 +184,7 @@ if __name__ == '__main__':
             detections = SimpleRectangle(x,y,w,h)
             logger.debug('detection rect: {}'.format(detections))
 
-            detections = rectify_detection(detections, canvas, guard)
+            detections = rectify_detection(detections, canvas, 1)
             logger.debug('rectified detection rect: {}'.format(detections))
 
             fb = feedbackProcessor.run(detections)
