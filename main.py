@@ -25,7 +25,7 @@ def parse_args():
     parser.add_argument('--weights',type=str , required= True, help='path to weights file')
     parser.add_argument('--config',type=str , default = 'data/xyolov3-tiny-obj.cfg' ,required= False, help='path to weights file')
     parser.add_argument('--detection_conf', type=float, default = 0.4 , required= False, help='yolo detection threshold')
-    parser.add_argument('--wait_ms', type=float, default = 1000 , required= False, help='delay in milliseconds b/w two iterations')
+    parser.add_argument('--wait_sec', type=float, default = 0 , required= False, help='delay in milliseconds b/w two iterations')
     parser.add_argument('--image_folder',type=str , default = '' ,required= False, help='path to image folder')
     parser.add_argument('--visualize', default=False, required= False, action='store_true', help='show yolo output?')
     
@@ -133,7 +133,7 @@ if __name__ == '__main__':
     logger.info(args)
 
     imageFolderDir = args.image_folder
-    sleepPeriod = args.wait_ms
+    sleepPeriod = args.wait_sec
 
     # make image reader
     if len(imageFolderDir)>0:
